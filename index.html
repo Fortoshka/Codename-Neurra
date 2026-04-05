@@ -3,159 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Главная страница</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        /* Верхний правый угол - личный кабинет */
-        .header {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-        }
-
-        .header a {
-            color: white;
-            text-decoration: none;
-            font-size: 16px;
-            padding: 10px 20px;
-            border: 2px solid white;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-        }
-
-        .header a:hover {
-            background: white;
-            color: #667eea;
-        }
-
-        /* Центр - название */
-        .main-title {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 72px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        /* Секция "почему мы?" */
-        .why-section {
-            text-align: center;
-            padding: 40px 20px;
-        }
-
-        .why-title {
-            font-size: 32px;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-
-        .why-description {
-            font-size: 28px;
-        }
-
-        .changing-word {
-            font-weight: 700;
-            color: #ffd700;
-            display: inline-block;
-            min-width: 200px;
-            text-align: left;
-        }
-
-        /* Нижняя часть - контакты */
-        .footer {
-            text-align: center;
-            padding: 30px 20px;
-            background: rgba(0, 0, 0, 0.2);
-        }
-
-        .footer-title {
-            font-size: 18px;
-            margin-bottom: 10px;
-            opacity: 0.9;
-        }
-
-        .footer-contacts {
-            font-size: 16px;
-        }
-
-        .footer-contacts p {
-            margin: 5px 0;
-        }
-
-        @media (max-width: 768px) {
-            .main-title {
-                font-size: 48px;
-            }
-
-            .why-title {
-                font-size: 24px;
-            }
-
-            .why-description {
-                font-size: 22px;
-            }
-        }
-    </style>
+    <title>COSMOS - Главная</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Верхний правый угол - переход в личный кабинет -->
-    <div class="header">
-        <a href="#" onclick="alert('Переход в личный кабинет (заглушка)'); return false;">Личный кабинет</a>
+    <!-- Звёздное небо -->
+    <div class="stars" id="stars"></div>
+
+    <div class="container">
+        <!-- Верхняя панель -->
+        <header class="header">
+            <a href="#" class="login-btn">Личный кабинет</a>
+        </header>
+
+        <!-- Главный заголовок -->
+        <h1 class="main-title">COSMOS</h1>
+
+        <!-- Секция "Почему мы?" -->
+        <section class="why-section">
+            <h2 class="why-title">почему мы?</h2>
+            <p class="why-content">
+                Потому что... <span class="changing-word" id="changingWord">Быстро</span>
+            </p>
+        </section>
+
+        <!-- Контакты -->
+        <footer class="contacts">
+            <p class="contacts-title">Служба поддержки</p>
+            <div class="contacts-info">
+                <p>Email: support@cosmos.com</p>
+                <p>Телефон: +7 (999) 000-00-00</p>
+                <p><a href="#">Telegram</a> | <a href="#">WhatsApp</a></p>
+            </div>
+        </footer>
     </div>
 
-    <!-- Центр - название -->
-    <div class="main-title">
-        BRANDNAME
-    </div>
-
-    <!-- Секция "почему мы?" -->
-    <div class="why-section">
-        <div class="why-title">Почему мы?</div>
-        <div class="why-description">
-            Потому что... <span class="changing-word" id="changingWord">Быстро</span>
-        </div>
-    </div>
-
-    <!-- Нижняя часть - контакты службы поддержки -->
-    <div class="footer">
-        <div class="footer-title">Служба поддержки</div>
-        <div class="footer-contacts">
-            <p>Email: support@brandname.com</p>
-            <p>Телефон: +7 (999) 123-45-67</p>
-            <p>Часы работы: 24/7</p>
-        </div>
-    </div>
-
-    <script>
-        // Циклическая смена слов
-        const words = ['Быстро', 'Просто', 'Безопасно'];
-        let currentIndex = 0;
-        const changingWordElement = document.getElementById('changingWord');
-
-        function changeWord() {
-            currentIndex = (currentIndex + 1) % words.length;
-            changingWordElement.textContent = words[currentIndex];
-        }
-
-        // Меняем слово каждые 2 секунды
-        setInterval(changeWord, 2000);
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>

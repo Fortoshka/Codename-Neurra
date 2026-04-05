@@ -1,0 +1,184 @@
+/* Основные стили */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #000;
+    color: #fff;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Звёздное небо */
+.stars {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.star {
+    position: absolute;
+    background-color: #fff;
+    border-radius: 50%;
+    animation: twinkle var(--duration) ease-in-out infinite;
+    opacity: var(--opacity);
+}
+
+@keyframes twinkle {
+    0%, 100% {
+        opacity: calc(var(--opacity) * 0.3);
+    }
+    50% {
+        opacity: var(--opacity);
+    }
+}
+
+/* Контейнер */
+.container {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Верхняя панель */
+.header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px 0;
+}
+
+.login-btn {
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    padding: 10px 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.login-btn:hover {
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Главный заголовок */
+.main-title {
+    text-align: center;
+    font-size: 4rem;
+    font-weight: 300;
+    letter-spacing: 8px;
+    margin: 15vh 0 10vh;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #fff 0%, #a8a8a8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Секция "Почему мы?" */
+.why-section {
+    text-align: center;
+    margin: 10vh 0;
+}
+
+.why-title {
+    font-size: 2rem;
+    font-weight: 300;
+    letter-spacing: 4px;
+    margin-bottom: 3vh;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.why-content {
+    font-size: 2.5rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.changing-word {
+    color: #fff;
+    font-weight: 600;
+    display: inline-block;
+    opacity: 1;
+    transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+}
+
+.changing-word.fade-out {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+.changing-word.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+/* Контакты */
+.contacts {
+    position: absolute;
+    bottom: 40px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 1;
+}
+
+.contacts-title {
+    font-size: 1.2rem;
+    font-weight: 300;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.contacts-info {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.8;
+}
+
+.contacts-info a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.contacts-info a:hover {
+    color: #fff;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .main-title {
+        font-size: 2.5rem;
+        letter-spacing: 4px;
+        margin: 20vh 0 8vh;
+    }
+
+    .why-title {
+        font-size: 1.5rem;
+    }
+
+    .why-content {
+        font-size: 1.8rem;
+    }
+
+    .contacts {
+        bottom: 30px;
+        padding: 0 20px;
+    }
+}
