@@ -68,11 +68,23 @@ body {
     font-size: 14px;
     transition: all 0.3s ease;
     text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .login-btn:hover {
     border-color: #fff;
     background: rgba(255, 255, 255, 0.1);
+}
+
+.alpha-badge {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
 /* Главный заголовок */
@@ -206,12 +218,9 @@ body {
 
 /* Контакты */
 .contacts {
-    position: fixed;
-    bottom: 40px;
-    left: 0;
-    right: 0;
     text-align: center;
-    z-index: 10;
+    padding: 60px 20px;
+    margin-top: 80px;
 }
 
 .contacts-title {
@@ -236,6 +245,31 @@ body {
 
 .contacts-info a:hover {
     color: #fff;
+}
+
+/* Кнопка заказа */
+.order-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: #fff;
+    padding: 12px 30px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.order-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.service-card.in-development .order-btn {
+    display: none;
 }
 
 /* Адаптивность */
@@ -268,7 +302,12 @@ body {
     }
 
     .contacts {
-        bottom: 30px;
-        padding: 0 20px;
+        padding: 40px 20px;
+        margin-top: 60px;
+    }
+
+    .alpha-badge {
+        font-size: 10px;
+        padding: 2px 6px;
     }
 }
