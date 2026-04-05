@@ -103,15 +103,25 @@ body {
     color: rgba(255, 255, 255, 0.9);
 }
 
-.why-content {
+.because-text {
     font-size: 2.5rem;
     font-weight: 400;
     color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 0;
+}
+
+.changing-word-container {
+    min-height: 3.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
 }
 
 .changing-word {
     color: #fff;
     font-weight: 600;
+    font-size: 2.5rem;
     display: inline-block;
     opacity: 1;
     transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
@@ -173,8 +183,13 @@ body {
         font-size: 1.5rem;
     }
 
-    .why-content {
+    .because-text,
+    .changing-word {
         font-size: 1.8rem;
+    }
+
+    .changing-word-container {
+        min-height: 2.5rem;
     }
 
     .contacts {
