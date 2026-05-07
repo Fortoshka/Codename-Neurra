@@ -392,6 +392,19 @@ body {
   margin-bottom: 20px;
 }
 
+.auth-description {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.auth-actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+}
+
 .auth-switch {
   text-align: center;
   font-size: 0.9rem;

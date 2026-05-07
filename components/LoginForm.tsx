@@ -62,7 +62,7 @@ export function LoginForm() {
       </button>
       <p className="auth-switch">
         Нет аккаунта?{" "}
-        <Link href="/register" className="auth-link">
+        <Link href="/register-unavailable" className="auth-link">
           Зарегистрироваться
         </Link>
       </p>
