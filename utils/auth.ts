@@ -20,8 +20,9 @@ function getSessionExpiry() {
   return new Date(Date.now() + ttlMs);
 }
 
-function setSessionCookie(token: string, expiresAt: Date) {
-  cookies().set(SESSION_COOKIE_NAME, token, {
+async function setSessionCookie(token: string, expiresAt: Date) {
+  const cookieStore = await cookies();
+  cookieStore.set(SESSION_COOKIE_NAME, token, {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
@@ -30,12 +31,14 @@ function setSessionCookie(token: string, expiresAt: Date) {
   });
 }
 
-export function getSessionToken() {
-  return cookies().get(SESSION_COOKIE_NAME)?.value ?? null;
+export async function getSessionToken() {
+  const cookieStore = await cookies();
+  return cookieStore.get(SESSION_COOKIE_NAME)?.value ?? null;
 }
 
-export function clearSessionCookie() {
-  cookies().set(SESSION_COOKIE_NAME, "", {
+export async function clearSessionCookie() {
+  const cookieStore = await cookies();
+  cookieStore.set(SESSION_COOKIE_NAME, "", {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
@@ -56,7 +59,7 @@ export async function createSession(userId: string) {
   const token = randomBytes(32).toString("hex");
   const tokenHash = hashToken(token);
   const expiresAt = getSessionExpiry();
-  const requestHeaders = headers();
+  const requestHeaders = await headers();
   const userAgent = requestHeaders.get("user-agent")?.slice(0, 255) || null;
   const ipHeader = requestHeaders.get("x-forwarded-for") || "";
   const ip = ipHeader.split(",")[0]?.trim() || requestHeaders.get("x-real-ip");
@@ -71,7 +74,7 @@ export async function createSession(userId: string) {
     },
   });
 
-  setSessionCookie(token, expiresAt);
+  await setSessionCookie(token, expiresAt);
   return token;
 }
 
@@ -80,11 +83,12 @@ export async function clearSession(token?: string | null) {
     const tokenHash = hashToken(token);
     await prisma.session.deleteMany({ where: { tokenHash } });
   }
-  clearSessionCookie();
+  await clearSessionCookie();
 }
 
 export async function getSession() {
-  const token = cookies().get(SESSION_COOKIE_NAME)?.value;
+  const cookieStore = await cookies();
+  const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
   if (!token) return null;
 
   const tokenHash = hashToken(token);
@@ -94,13 +98,13 @@ export async function getSession() {
   });
 
   if (!session) {
-    clearSessionCookie();
+    await clearSessionCookie();
     return null;
   }
 
   if (session.expiresAt.getTime() <= Date.now()) {
     await prisma.session.delete({ where: { id: session.id } });
-    clearSessionCookie();
+    await clearSessionCookie();
     return null;
   }
 

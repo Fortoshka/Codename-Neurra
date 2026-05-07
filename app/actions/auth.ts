@@ -95,7 +95,7 @@ export async function registerAction(
 }
 
 export async function logoutAction() {
-  const token = getSessionToken();
+  const token = await getSessionToken();
   await clearSession(token);
   redirect("/");
 }
