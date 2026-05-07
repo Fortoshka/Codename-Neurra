@@ -1,17 +1,15 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { createClient } from "@/utils/supabase/server";
+import { getCurrentUser } from "@/utils/auth";
 import { StarsBackground } from "@/components/StarsBackground";
 import { RegisterForm } from "@/components/RegisterForm";
 
 export default async function RegisterPage() {
-  const cookieStore = await cookies();
-  const supabase = createClient(cookieStore);
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
   if (user) redirect("/cabinet");
+
+  const registrationEnabled = process.env.REGISTRATION_ENABLED === "true";
+  if (!registrationEnabled) redirect("/register-unavailable");
 
   return (
     <>

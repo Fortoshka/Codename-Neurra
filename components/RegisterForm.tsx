@@ -1,45 +1,26 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useFormState, useFormStatus } from "react-dom";
 import Link from "next/link";
-import { createClient } from "@/utils/supabase/client";
+import { registerAction } from "@/app/actions/auth";
+import type { AuthFormState } from "@/types/auth";
+
+const initialState: AuthFormState = { error: null, success: null };
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <button className="login-btn auth-submit" type="submit" disabled={pending}>
+      {pending ? "Регистрация…" : "Зарегистрироваться"}
+    </button>
+  );
+}
 
 export function RegisterForm() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-    const supabase = createClient();
-    const { data, error: signError } = await supabase.auth.signUp({
-      email: email.trim(),
-      password,
-      options: {
-        data: { full_name: name.trim() },
-      },
-    });
-    setLoading(false);
-    if (signError) {
-      setError(signError.message);
-      return;
-    }
-    if (data.session) {
-      router.refresh();
-      router.push("/cabinet");
-      return;
-    }
-    router.push("/login?registered=1");
-  }
+  const [state, formAction] = useFormState(registerAction, initialState);
 
   return (
-    <form className="auth-form" onSubmit={handleSubmit}>
+    <form className="auth-form" action={formAction}>
       <label className="auth-label">
         Имя
         <input
@@ -47,8 +28,6 @@ export function RegisterForm() {
           type="text"
           name="name"
           autoComplete="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
           required
           minLength={1}
         />
@@ -60,8 +39,6 @@ export function RegisterForm() {
           type="email"
           name="email"
           autoComplete="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
           required
         />
       </label>
@@ -72,16 +49,12 @@ export function RegisterForm() {
           type="password"
           name="password"
           autoComplete="new-password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
           required
           minLength={6}
         />
       </label>
-      {error ? <p className="auth-error">{error}</p> : null}
-      <button className="login-btn auth-submit" type="submit" disabled={loading}>
-        {loading ? "Регистрация…" : "Зарегистрироваться"}
-      </button>
+      {state.error ? <p className="auth-error">{state.error}</p> : null}
+      <SubmitButton />
       <p className="auth-switch">
         Уже есть аккаунт?{" "}
         <Link href="/login" className="auth-link">

@@ -1,37 +1,26 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useFormState, useFormStatus } from "react-dom";
 import Link from "next/link";
-import { createClient } from "@/utils/supabase/client";
+import { loginAction } from "@/app/actions/auth";
+import type { AuthFormState } from "@/types/auth";
+
+const initialState: AuthFormState = { error: null, success: null };
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <button className="login-btn auth-submit" type="submit" disabled={pending}>
+      {pending ? "Вход…" : "Войти"}
+    </button>
+  );
+}
 
 export function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-    const supabase = createClient();
-    const { error: signError } = await supabase.auth.signInWithPassword({
-      email: email.trim(),
-      password,
-    });
-    setLoading(false);
-    if (signError) {
-      setError(signError.message);
-      return;
-    }
-    router.refresh();
-    router.push("/cabinet");
-  }
+  const [state, formAction] = useFormState(loginAction, initialState);
 
   return (
-    <form className="auth-form" onSubmit={handleSubmit}>
+    <form className="auth-form" action={formAction}>
       <label className="auth-label">
         Логин (email)
         <input
@@ -39,8 +28,6 @@ export function LoginForm() {
           type="email"
           name="email"
           autoComplete="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
           required
         />
       </label>
@@ -51,15 +38,16 @@ export function LoginForm() {
           type="password"
           name="password"
           autoComplete="current-password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
           required
         />
       </label>
-      {error ? <p className="auth-error">{error}</p> : null}
-      <button className="login-btn auth-submit" type="submit" disabled={loading}>
-        {loading ? "Вход…" : "Войти"}
-      </button>
+      {state.error ? <p className="auth-error">{state.error}</p> : null}
+      <SubmitButton />
+      <p className="auth-help">
+        <Link href="/forgot-password" className="auth-link">
+          Забыли пароль?
+        </Link>
+      </p>
       <p className="auth-switch">
         Нет аккаунта?{" "}
         <Link href="/register-unavailable" className="auth-link">

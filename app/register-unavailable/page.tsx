@@ -1,15 +1,10 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { createClient } from "@/utils/supabase/server";
+import { getCurrentUser } from "@/utils/auth";
 import { StarsBackground } from "@/components/StarsBackground";
 
 export default async function RegisterUnavailablePage() {
-  const cookieStore = await cookies();
-  const supabase = createClient(cookieStore);
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
   if (user) redirect("/cabinet");
 
   return (

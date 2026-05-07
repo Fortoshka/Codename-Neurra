@@ -1,12 +1,26 @@
-import { type NextRequest } from "next/server";
-import { updateSession } from "@/utils/supabase/middleware";
+import { type NextRequest, NextResponse } from "next/server";
 
-export async function middleware(request: NextRequest) {
-  return await updateSession(request);
+const SESSION_COOKIE_NAME =
+  process.env.SESSION_COOKIE_NAME?.trim() || "neurra_session";
+
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (!pathname.startsWith("/cabinet")) {
+    return NextResponse.next();
+  }
+
+  const hasSession = request.cookies.get(SESSION_COOKIE_NAME)?.value;
+  if (!hasSession) {
+    const loginUrl = request.nextUrl.clone();
+    loginUrl.pathname = "/login";
+    loginUrl.searchParams.set("from", pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
-  ],
+  matcher: ["/cabinet/:path*"],
 };

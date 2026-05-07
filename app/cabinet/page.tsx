@@ -1,37 +1,27 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { createClient } from "@/utils/supabase/server";
+import { getCurrentUser } from "@/utils/auth";
+import { prisma } from "@/utils/db";
 import { StarsBackground } from "@/components/StarsBackground";
 import { LogoutButton } from "@/components/LogoutButton";
 
 export default async function CabinetPage() {
-  const cookieStore = await cookies();
-  const supabase = createClient(cookieStore);
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
   if (!user) redirect("/login");
 
-  const { data: rows, error } = await supabase
-    .from("purchased_services")
-    .select("id, name, created_at")
-    .order("created_at", { ascending: false });
+  let rows = [] as Array<{ id: string; name: string; createdAt: Date }>;
+  let errorMessage: string | null = null;
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("name, email")
-    .eq("id", user.id)
-    .maybeSingle();
+  try {
+    rows = await prisma.purchasedService.findMany({
+      where: { userId: user.id },
+      orderBy: { createdAt: "desc" },
+    });
+  } catch {
+    errorMessage = "Не удалось загрузить услуги. Попробуйте позже.";
+  }
 
-  const displayName =
-    (profile?.name && profile.name.trim()) ||
-    (typeof user.user_metadata?.full_name === "string" &&
-      user.user_metadata.full_name) ||
-    (typeof user.user_metadata?.name === "string" && user.user_metadata.name) ||
-    profile?.email ||
-    user.email ||
-    "Пользователь";
+  const displayName = user.name?.trim() || user.email || "Пользователь";
 
   return (
     <>
@@ -48,7 +38,7 @@ export default async function CabinetPage() {
         <main className="cabinet-main">
           <h1 className="cabinet-user-name">{displayName}</h1>
           <h2 className="cabinet-section-title">Приобретённые услуги</h2>
-          {error ? <p className="auth-error">{error.message}</p> : null}
+          {errorMessage ? <p className="auth-error">{errorMessage}</p> : null}
           <div className="table-wrap">
             <table className="purchases-table">
               <thead>
@@ -71,8 +61,8 @@ export default async function CabinetPage() {
                       <td>{row.name}</td>
                       <td className="mono">{row.id}</td>
                       <td>
-                        {row.created_at
-                          ? new Date(row.created_at).toLocaleString("ru-RU")
+                        {row.createdAt
+                          ? row.createdAt.toLocaleString("ru-RU")
                           : "—"}
                       </td>
                     </tr>
